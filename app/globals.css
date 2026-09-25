@@ -1,26 +1,168 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0A0A0B;
+  --bg-panel: #0F1012;
+  --bg-elevated: #16181C;
+  --border: #1F2126;
+  --border-bright: #2A2D33;
+  --fg: #E8EAED;
+  --fg-dim: #8A8F99;
+  --fg-dimmer: #5A5F68;
+  --accent: #00D9FF;
+  --warn: #FFB020;
+  --alert: #FF3B30;
+  --nominal: #34C759;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-feature-settings: "tnum" 1;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.mono {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-variant-numeric: tabular-nums;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+}
+
+.panel-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+/* Anduril corner brackets */
+.bracket {
+  position: relative;
+}
+.bracket::before,
+.bracket::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--fg-dim);
+  pointer-events: none;
+}
+.bracket::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.bracket::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Dot */
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+
+/* Pulsing zone marker */
+@keyframes pulse-ring {
+  0%   { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.zone-marker {
+  position: relative;
+  width: 12px;
+  height: 12px;
+}
+.zone-marker .core {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+.zone-marker .ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+.zone-marker.alert .core { background: var(--alert); }
+.zone-marker.alert .ring { border-color: var(--alert); }
+
+/* Radar sweep */
+@keyframes sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.radar-sweep {
+  animation: sweep 8s linear infinite;
+  transform-origin: center;
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: #050506 !important;
+  font-family: inherit !important;
+  outline: none !important;
+}
+.leaflet-tile {
+  filter: contrast(1.05) brightness(0.9);
+}
+.leaflet-control-attribution {
+  background: rgba(10,10,11,0.7) !important;
+  color: var(--fg-dimmer) !important;
+  font-size: 9px !important;
+  border: none !important;
+}
+.leaflet-control-attribution a {
+  color: var(--fg-dim) !important;
+}
+.leaflet-control-zoom {
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  background: var(--bg-panel) !important;
+}
+.leaflet-control-zoom a {
+  background: var(--bg-panel) !important;
+  color: var(--fg-dim) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  font-size: 14px !important;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--bg-elevated) !important;
+  color: var(--accent) !important;
+}
+.leaflet-popup-content-wrapper {
+  background: var(--bg-elevated) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--border-bright) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.leaflet-popup-tip {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-bright) !important;
+  box-shadow: none !important;
+}
+.leaflet-popup-close-button {
+  color: var(--fg-dim) !important;
+}
+.leaflet-popup-content {
+  margin: 12px 14px !important;
+  font-family: inherit !important;
 }
